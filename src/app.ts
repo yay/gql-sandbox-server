@@ -72,7 +72,7 @@ const API = 'https://dog.ceo/api';
 // Here we just wrap the `dog.ceo` REST-based API.
 const resolvers: Resolvers = {
   Query: {
-    dogs: async () => {
+    dogs: async (parent, args, context, info) => {
       const results = await fetch(`${API}/breeds/list/all`);
       const { message: dogs } = (await results.json()) as {
         message: { [key: string]: string[] };
@@ -82,22 +82,22 @@ const resolvers: Resolvers = {
       const result = breeds.map((breed) => createDog(breed, dogs[breed]));
       return result;
     },
-    dog: async (root: any, { breed }: any) => {
+    dog: async (parent, { breed }) => {
       const results = await fetch(`${API}/breed/${breed}/list`);
       const { message: subbreeds } = (await results.json()) as {
-        message: any[];
+        message: string[];
       };
 
       return createDog(breed, subbreeds);
     },
   },
   Dog: {
-    displayImage: async ({ breed }: any) => {
+    displayImage: async ({ breed }, parent, context) => {
       const results = await fetch(`${API}/breed/${breed}/images/random`);
       const { message: image } = (await results.json()) as { message: string };
       return image;
     },
-    images: async ({ breed }: any) => {
+    images: async ({ breed }, parent, context) => {
       const results = await fetch(`${API}/breed/${breed}/images`);
       const { message: images } = (await results.json()) as {
         message: string[];
