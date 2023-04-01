@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { hash } from './hash';
+import { readFileSync } from 'fs';
 
 /**
  * The following lines intialize dotenv,
@@ -9,8 +10,12 @@ import { hash } from './hash';
  */
 dotenv.config();
 
-// Construct a schema, using GraphQL schema language
-const typeDefs = `
+// Construct a schema, using GraphQL schema language:
+// https://www.apollographql.com/docs/apollo-server/schema/schema
+// Comments start with `#`. The `#graphql` comment enables syntax highlighting
+// (install the `graphql.vscode-graphql` VS Code extension).
+// A more common way to define a schema is do it inside a '.graphql' file.
+const schema = `#graphql
   enum CacheControlScope {
     PUBLIC
     PRIVATE
@@ -22,12 +27,18 @@ const typeDefs = `
     inheritMaxAge: Boolean
   ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
+  # The "Query" type is special: it lists all of the available queries that
+  # clients can execute, along with the return type for each. In this
+  # case, the "dogs" query returns an array of zero or more Dogs (defined below).
   type Query {
     dogs: [Dog]
 		dog(breed: String!): Dog
   }
 
+  # This "Dog" type defines the queryable fields for every dog in our data source.
 	type Dog @cacheControl(maxAge: 1000) {
+    # By default, it's valid for any field in your schema to return 'null' instead of its specified type.
+    # You can require that a particular field doesn't return 'null' with an exclamation mark '!'.
 		id: String!
 		breed: String!
 		displayImage: String
@@ -36,6 +47,10 @@ const typeDefs = `
 	}
 
 	type Image @cacheControl(maxAge: 1000) {
+    # Every object type in your schema automatically has a field named '__typename' (you don't need to define it).
+    # The '__typename' field returns the object type's name as a String (e.g., 'Image').
+    # GraphQL clients use an object's '__typename' for many purposes,
+    # such as to determine which type was returned by a field that can return multiple types (i.e., a union or interface).
 		url: String!
 		id: String!
 	}
@@ -51,7 +66,9 @@ const createDog = (breed: string, subbreeds: string[]) => ({
 
 const API = 'https://dog.ceo/api';
 
-// Provide resolver functions for your schema fields
+// Provide resolver functions for your schema fields.
+// Resolvers tell Apollo Server how to fetch the data associated with a particular type.
+// Here we just wrap the `dog.ceo` REST-based API.
 const resolvers = {
   Query: {
     dogs: async () => {
@@ -89,11 +106,14 @@ const resolvers = {
   },
 };
 
+const typeDefs = String(readFileSync('./schema.graphql'));
+
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true, // it's recommended to disable this in production environment
 });
 
 // Passing an ApolloServer instance to the `startStandaloneServer` function:

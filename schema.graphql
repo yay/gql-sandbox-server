@@ -1,0 +1,28 @@
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+
+directive @cacheControl(
+  maxAge: Int
+  scope: CacheControlScope
+  inheritMaxAge: Boolean
+) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
+type Query {
+  dogs: [Dog]
+  dog(breed: String!): Dog
+}
+
+type Dog @cacheControl(maxAge: 1000) {
+  id: String!
+  breed: String!
+  displayImage: String
+  images: [Image]
+  subbreeds: [String]
+}
+
+type Image @cacheControl(maxAge: 1000) {
+  url: String!
+  id: String!
+}
