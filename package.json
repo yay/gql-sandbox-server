@@ -4,7 +4,7 @@
   "version": "1.98.0",
   "description": "A template for a nodejs application, using typescript",
   "main": "dist/src/index.js",
-  "author": "",
+  "author": "Vitalii Kravchenko",
   "license": "MIT",
   "scripts": {
     "dev": "nodemon -I --exec node --experimental-specifier-resolution=node --loader ts-node/esm ./src/app.ts",

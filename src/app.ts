@@ -127,7 +127,7 @@ const typeDefs = readFileSync('./schema.graphql', { encoding: 'utf-8' });
 // enabling you to customize your `contextValue` with each request's details (such as HTTP headers).
 
 // Types for our `contextValue`:
-interface SandboxContext {
+export interface SandboxContext {
   authScope?: string;
 }
 
