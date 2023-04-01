@@ -106,7 +106,7 @@ const resolvers = {
   },
 };
 
-const typeDefs = String(readFileSync('./schema.graphql'));
+const typeDefs = readFileSync('./schema.graphql', { encoding: 'utf-8' });
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
