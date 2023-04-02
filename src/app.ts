@@ -48,11 +48,7 @@ const schema = `#graphql
 	}
 
 	type Image @cacheControl(maxAge: 1000) {
-    # Every object type in your schema automatically has a field named '__typename' (you don't need to define it).
-    # The '__typename' field returns the object type's name as a String (e.g., 'Image').
-    # GraphQL clients use an object's '__typename' for many purposes,
-    # such as to determine which type was returned by a field that can return multiple types (i.e., a union or interface).
-		url: String!
+    url: String!
 		id: String!
 	}
 `;
@@ -105,6 +101,9 @@ const resolvers: Resolvers = {
       return images.map((image) => ({ url: image, id: hash(image) }));
     },
   },
+  // In GraphQL, it's recommended for every mutation's response to include the data that the mutation modified.
+  // This enables clients to obtain the latest persisted data without needing to send a followup query.
+  Mutation: {},
 };
 
 const typeDefs = readFileSync('./schema.graphql', { encoding: 'utf-8' });

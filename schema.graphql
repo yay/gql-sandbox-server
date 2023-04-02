@@ -9,13 +9,27 @@ directive @cacheControl(
   inheritMaxAge: Boolean
 ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
+# The Query type is a special object type that defines all of the top-level entry points
+# for queries that clients execute against your server.
 type Query {
   dogs: [Dog]
   dog(breed: String!): Dog
 }
 
+# The Mutation type is similar in structure and purpose to the Query type.
+# Whereas the Query type defines entry points for read operations,
+# the Mutation type defines entry points for write operations.
+type Mutation {
+  addMovie(title: String, director: String): Movie
+}
+
+# Every object type in your schema automatically has a field named '__typename' (you don't need to define it).
+# The '__typename' field returns the object type's name as a String (e.g., 'Image').
+# GraphQL clients use an object's '__typename' for many purposes, such as to determine which type was returned
+# by a field that can return multiple types (i.e., a union or interface).
 type Dog @cacheControl(maxAge: 1000) {
-  id: String!
+  # By default, it's valid for any field in your schema to return null instead of its specified type.
+  id: String! # ! == can't return null
   breed: String!
   displayImage: String
   images: [Image]
@@ -25,4 +39,21 @@ type Dog @cacheControl(maxAge: 1000) {
 type Image @cacheControl(maxAge: 1000) {
   url: String!
   id: String!
+}
+
+type Movie {
+  title: String!
+  year: Int
+  director: Director!
+  cast: [Actor]
+}
+
+type Director {
+  name: String!
+  movies: [Movie]
+}
+
+type Actor {
+  name: String!
+  movies: [Movie]
 }

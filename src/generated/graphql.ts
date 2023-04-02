@@ -15,10 +15,22 @@ export type Scalars = {
   Float: number;
 };
 
+export type Actor = {
+  __typename?: 'Actor';
+  movies?: Maybe<Array<Maybe<Movie>>>;
+  name: Scalars['String'];
+};
+
 export enum CacheControlScope {
   Private = 'PRIVATE',
   Public = 'PUBLIC'
 }
+
+export type Director = {
+  __typename?: 'Director';
+  movies?: Maybe<Array<Maybe<Movie>>>;
+  name: Scalars['String'];
+};
 
 export type Dog = {
   __typename?: 'Dog';
@@ -33,6 +45,25 @@ export type Image = {
   __typename?: 'Image';
   id: Scalars['String'];
   url: Scalars['String'];
+};
+
+export type Movie = {
+  __typename?: 'Movie';
+  cast?: Maybe<Array<Maybe<Actor>>>;
+  director: Director;
+  title: Scalars['String'];
+  year?: Maybe<Scalars['Int']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  addMovie?: Maybe<Movie>;
+};
+
+
+export type MutationAddMovieArgs = {
+  director?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -116,21 +147,29 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Actor: ResolverTypeWrapper<Actor>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   CacheControlScope: CacheControlScope;
+  Director: ResolverTypeWrapper<Director>;
   Dog: ResolverTypeWrapper<Dog>;
   Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
+  Movie: ResolverTypeWrapper<Movie>;
+  Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Actor: Actor;
   Boolean: Scalars['Boolean'];
+  Director: Director;
   Dog: Dog;
   Image: Image;
   Int: Scalars['Int'];
+  Movie: Movie;
+  Mutation: {};
   Query: {};
   String: Scalars['String'];
 };
@@ -142,6 +181,18 @@ export type CacheControlDirectiveArgs = {
 };
 
 export type CacheControlDirectiveResolver<Result, Parent, ContextType = SandboxContext, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type ActorResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Actor'] = ResolversParentTypes['Actor']> = {
+  movies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Movie']>>>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DirectorResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Director'] = ResolversParentTypes['Director']> = {
+  movies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Movie']>>>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type DogResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Dog'] = ResolversParentTypes['Dog']> = {
   breed?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -158,14 +209,30 @@ export type ImageResolvers<ContextType = SandboxContext, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type MovieResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Movie'] = ResolversParentTypes['Movie']> = {
+  cast?: Resolver<Maybe<Array<Maybe<ResolversTypes['Actor']>>>, ParentType, ContextType>;
+  director?: Resolver<ResolversTypes['Director'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  year?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type MutationResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  addMovie?: Resolver<Maybe<ResolversTypes['Movie']>, ParentType, ContextType, Partial<MutationAddMovieArgs>>;
+};
+
 export type QueryResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   dog?: Resolver<Maybe<ResolversTypes['Dog']>, ParentType, ContextType, RequireFields<QueryDogArgs, 'breed'>>;
   dogs?: Resolver<Maybe<Array<Maybe<ResolversTypes['Dog']>>>, ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = SandboxContext> = {
+  Actor?: ActorResolvers<ContextType>;
+  Director?: DirectorResolvers<ContextType>;
   Dog?: DogResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
+  Movie?: MovieResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };
 
