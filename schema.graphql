@@ -14,13 +14,14 @@ directive @cacheControl(
 type Query {
   dogs: [Dog]
   dog(breed: String!): Dog
+  getNetworkingList: NetworkingList!
 }
 
 # The Mutation type is similar in structure and purpose to the Query type.
 # Whereas the Query type defines entry points for read operations,
 # the Mutation type defines entry points for write operations.
 type Mutation {
-  addMovie(title: String, director: String): Movie
+  addMovie(title: String!, director: String!, year: Int): Movie
 }
 
 # Every object type in your schema automatically has a field named '__typename' (you don't need to define it).
@@ -56,4 +57,41 @@ type Director {
 type Actor {
   name: String!
   movies: [Movie]
+}
+
+type NetworkingList {
+  id: ID
+  name: String!
+  networkingListEntriesData(
+    # filters: NetworkingListEntriesFilters
+    limit: Int
+    page: Int
+    search: String
+    sort: [NetworkingListEntriesSort!]
+  ): NetworkingListEntriesData!
+}
+
+type NetworkingListEntriesData {
+  data: [NetworkingListEntry!]
+  totalCount: Int!
+}
+
+type NetworkingListEntry {
+  createdDate: String
+}
+
+input NetworkingListEntriesSort {
+  field: NetworkingListEntriesSortField!
+  order: SortOrder!
+}
+
+enum NetworkingListEntriesSortField {
+  CREATED_DATE
+  LOCATION
+  NAME
+}
+
+enum SortOrder {
+  ASC
+  DESC
 }

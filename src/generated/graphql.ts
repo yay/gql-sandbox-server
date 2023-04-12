@@ -62,20 +62,64 @@ export type Mutation = {
 
 
 export type MutationAddMovieArgs = {
-  director?: InputMaybe<Scalars['String']>;
-  title?: InputMaybe<Scalars['String']>;
+  director: Scalars['String'];
+  title: Scalars['String'];
+  year?: InputMaybe<Scalars['Int']>;
+};
+
+export type NetworkingList = {
+  __typename?: 'NetworkingList';
+  id?: Maybe<Scalars['ID']>;
+  name: Scalars['String'];
+  networkingListEntriesData: NetworkingListEntriesData;
+};
+
+
+export type NetworkingListNetworkingListEntriesDataArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  page?: InputMaybe<Scalars['Int']>;
+  search?: InputMaybe<Scalars['String']>;
+  sort?: InputMaybe<Array<NetworkingListEntriesSort>>;
+};
+
+export type NetworkingListEntriesData = {
+  __typename?: 'NetworkingListEntriesData';
+  data?: Maybe<Array<NetworkingListEntry>>;
+  totalCount: Scalars['Int'];
+};
+
+export type NetworkingListEntriesSort = {
+  field: NetworkingListEntriesSortField;
+  order: SortOrder;
+};
+
+export enum NetworkingListEntriesSortField {
+  CreatedDate = 'CREATED_DATE',
+  Location = 'LOCATION',
+  Name = 'NAME'
+}
+
+export type NetworkingListEntry = {
+  __typename?: 'NetworkingListEntry';
+  createdDate?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
   dog?: Maybe<Dog>;
   dogs?: Maybe<Array<Maybe<Dog>>>;
+  getNetworkingList: NetworkingList;
 };
 
 
 export type QueryDogArgs = {
   breed: Scalars['String'];
 };
+
+export enum SortOrder {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
 
 
 
@@ -145,6 +189,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 
+
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Actor: ResolverTypeWrapper<Actor>;
@@ -152,11 +197,18 @@ export type ResolversTypes = {
   CacheControlScope: CacheControlScope;
   Director: ResolverTypeWrapper<Director>;
   Dog: ResolverTypeWrapper<Dog>;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
   Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Movie: ResolverTypeWrapper<Movie>;
   Mutation: ResolverTypeWrapper<{}>;
+  NetworkingList: ResolverTypeWrapper<NetworkingList>;
+  NetworkingListEntriesData: ResolverTypeWrapper<NetworkingListEntriesData>;
+  NetworkingListEntriesSort: NetworkingListEntriesSort;
+  NetworkingListEntriesSortField: NetworkingListEntriesSortField;
+  NetworkingListEntry: ResolverTypeWrapper<NetworkingListEntry>;
   Query: ResolverTypeWrapper<{}>;
+  SortOrder: SortOrder;
   String: ResolverTypeWrapper<Scalars['String']>;
 };
 
@@ -166,10 +218,15 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Director: Director;
   Dog: Dog;
+  ID: Scalars['ID'];
   Image: Image;
   Int: Scalars['Int'];
   Movie: Movie;
   Mutation: {};
+  NetworkingList: NetworkingList;
+  NetworkingListEntriesData: NetworkingListEntriesData;
+  NetworkingListEntriesSort: NetworkingListEntriesSort;
+  NetworkingListEntry: NetworkingListEntry;
   Query: {};
   String: Scalars['String'];
 };
@@ -218,12 +275,31 @@ export type MovieResolvers<ContextType = SandboxContext, ParentType extends Reso
 };
 
 export type MutationResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addMovie?: Resolver<Maybe<ResolversTypes['Movie']>, ParentType, ContextType, Partial<MutationAddMovieArgs>>;
+  addMovie?: Resolver<Maybe<ResolversTypes['Movie']>, ParentType, ContextType, RequireFields<MutationAddMovieArgs, 'director' | 'title'>>;
+};
+
+export type NetworkingListResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['NetworkingList'] = ResolversParentTypes['NetworkingList']> = {
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  networkingListEntriesData?: Resolver<ResolversTypes['NetworkingListEntriesData'], ParentType, ContextType, Partial<NetworkingListNetworkingListEntriesDataArgs>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type NetworkingListEntriesDataResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['NetworkingListEntriesData'] = ResolversParentTypes['NetworkingListEntriesData']> = {
+  data?: Resolver<Maybe<Array<ResolversTypes['NetworkingListEntry']>>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type NetworkingListEntryResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['NetworkingListEntry'] = ResolversParentTypes['NetworkingListEntry']> = {
+  createdDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type QueryResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   dog?: Resolver<Maybe<ResolversTypes['Dog']>, ParentType, ContextType, RequireFields<QueryDogArgs, 'breed'>>;
   dogs?: Resolver<Maybe<Array<Maybe<ResolversTypes['Dog']>>>, ParentType, ContextType>;
+  getNetworkingList?: Resolver<ResolversTypes['NetworkingList'], ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = SandboxContext> = {
@@ -233,6 +309,9 @@ export type Resolvers<ContextType = SandboxContext> = {
   Image?: ImageResolvers<ContextType>;
   Movie?: MovieResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  NetworkingList?: NetworkingListResolvers<ContextType>;
+  NetworkingListEntriesData?: NetworkingListEntriesDataResolvers<ContextType>;
+  NetworkingListEntry?: NetworkingListEntryResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };
 

@@ -86,6 +86,21 @@ const resolvers: Resolvers = {
 
       return createDog(breed, subbreeds);
     },
+    getNetworkingList: async (parent, args, context, info) => {
+      console.log(info.variableValues);
+      return {
+        id: '42',
+        name: 'The Answer To Everything',
+        networkingListEntriesData: {
+          data: [
+            {
+              createdDate: 'lol',
+            },
+          ],
+          totalCount: 1,
+        },
+      };
+    },
   },
   Dog: {
     displayImage: async ({ breed }, parent, context) => {
@@ -103,7 +118,16 @@ const resolvers: Resolvers = {
   },
   // In GraphQL, it's recommended for every mutation's response to include the data that the mutation modified.
   // This enables clients to obtain the latest persisted data without needing to send a followup query.
-  Mutation: {},
+  Mutation: {
+    addMovie: async (bred, parent, context) => {
+      return {
+        title: 'lol',
+        director: {
+          name: 'lol',
+        },
+      };
+    },
+  },
 };
 
 const typeDefs = readFileSync('./schema.graphql', { encoding: 'utf-8' });
