@@ -41,6 +41,11 @@ export type Dog = {
   subbreeds?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
+export type Finance = {
+  __typename?: 'Finance';
+  crumb?: Maybe<Scalars['String']>;
+};
+
 export type Image = {
   __typename?: 'Image';
   id: Scalars['String'];
@@ -108,6 +113,7 @@ export type Query = {
   __typename?: 'Query';
   dog?: Maybe<Dog>;
   dogs?: Maybe<Array<Maybe<Dog>>>;
+  finance?: Maybe<Finance>;
   getNetworkingList: NetworkingList;
 };
 
@@ -197,6 +203,7 @@ export type ResolversTypes = {
   CacheControlScope: CacheControlScope;
   Director: ResolverTypeWrapper<Director>;
   Dog: ResolverTypeWrapper<Dog>;
+  Finance: ResolverTypeWrapper<Finance>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
@@ -218,6 +225,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
   Director: Director;
   Dog: Dog;
+  Finance: Finance;
   ID: Scalars['ID'];
   Image: Image;
   Int: Scalars['Int'];
@@ -260,6 +268,11 @@ export type DogResolvers<ContextType = SandboxContext, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type FinanceResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Finance'] = ResolversParentTypes['Finance']> = {
+  crumb?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ImageResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Image'] = ResolversParentTypes['Image']> = {
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -299,6 +312,7 @@ export type NetworkingListEntryResolvers<ContextType = SandboxContext, ParentTyp
 export type QueryResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   dog?: Resolver<Maybe<ResolversTypes['Dog']>, ParentType, ContextType, RequireFields<QueryDogArgs, 'breed'>>;
   dogs?: Resolver<Maybe<Array<Maybe<ResolversTypes['Dog']>>>, ParentType, ContextType>;
+  finance?: Resolver<Maybe<ResolversTypes['Finance']>, ParentType, ContextType>;
   getNetworkingList?: Resolver<ResolversTypes['NetworkingList'], ParentType, ContextType>;
 };
 
@@ -306,6 +320,7 @@ export type Resolvers<ContextType = SandboxContext> = {
   Actor?: ActorResolvers<ContextType>;
   Director?: DirectorResolvers<ContextType>;
   Dog?: DogResolvers<ContextType>;
+  Finance?: FinanceResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
   Movie?: MovieResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

@@ -1,3 +1,19 @@
+# The Query type is a special object type that defines all of the top-level entry points
+# for queries that clients execute against your server.
+type Query {
+  dogs: [Dog]
+  dog(breed: String!): Dog
+  getNetworkingList: NetworkingList!
+  finance: Finance
+}
+
+# The Mutation type is similar in structure and purpose to the Query type.
+# Whereas the Query type defines entry points for read operations,
+# the Mutation type defines entry points for write operations.
+type Mutation {
+  addMovie(title: String!, director: String!, year: Int): Movie
+}
+
 enum CacheControlScope {
   PUBLIC
   PRIVATE
@@ -9,19 +25,8 @@ directive @cacheControl(
   inheritMaxAge: Boolean
 ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
-# The Query type is a special object type that defines all of the top-level entry points
-# for queries that clients execute against your server.
-type Query {
-  dogs: [Dog]
-  dog(breed: String!): Dog
-  getNetworkingList: NetworkingList!
-}
-
-# The Mutation type is similar in structure and purpose to the Query type.
-# Whereas the Query type defines entry points for read operations,
-# the Mutation type defines entry points for write operations.
-type Mutation {
-  addMovie(title: String!, director: String!, year: Int): Movie
+type Finance {
+  crumb: String
 }
 
 # Every object type in your schema automatically has a field named '__typename' (you don't need to define it).

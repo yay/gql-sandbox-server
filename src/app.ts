@@ -4,6 +4,7 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 import { hash } from './hash';
 import { readFileSync } from 'fs';
 import { Resolvers } from './generated/graphql';
+import { getYFinanceAuth } from './yahoo';
 
 /**
  * The following lines intialize `dotenv`,
@@ -100,6 +101,9 @@ const resolvers: Resolvers = {
           totalCount: 1,
         },
       };
+    },
+    finance: async () => {
+      return await getYFinanceAuth('AAPL');
     },
   },
   Dog: {
