@@ -3,7 +3,6 @@
 type Query {
   dogs: [Dog]
   dog(breed: String!): Dog
-  getNetworkingList: NetworkingList!
   finance: Finance
 }
 

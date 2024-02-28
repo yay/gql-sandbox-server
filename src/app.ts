@@ -70,37 +70,23 @@ const API = 'https://dog.ceo/api';
 const resolvers: Resolvers = {
   Query: {
     dogs: async (parent, args, context, info) => {
-      const results = await fetch(`${API}/breeds/list/all`);
-      const { message: dogs } = (await results.json()) as {
-        message: { [key: string]: string[] };
+      const response = await fetch(`${API}/breeds/list/all`);
+      const { message: breedToSubbreedsMap } = (await response.json()) as {
+        message: { [breed: string]: string[] };
       };
 
-      const breeds = Object.keys(dogs);
-      const result = breeds.map((breed) => createDog(breed, dogs[breed]));
-      return result;
+      const breeds = Object.keys(breedToSubbreedsMap);
+      const dogs = breeds.map((breed) =>
+        createDog(breed, breedToSubbreedsMap[breed]),
+      );
+      return dogs;
     },
     dog: async (parent, { breed }) => {
-      const results = await fetch(`${API}/breed/${breed}/list`);
-      const { message: subbreeds } = (await results.json()) as {
+      const response = await fetch(`${API}/breed/${breed}/list`);
+      const { message: subbreeds } = (await response.json()) as {
         message: string[];
       };
-
       return createDog(breed, subbreeds);
-    },
-    getNetworkingList: async (parent, args, context, info) => {
-      console.log(info.variableValues);
-      return {
-        id: '42',
-        name: 'The Answer To Everything',
-        networkingListEntriesData: {
-          data: [
-            {
-              createdDate: 'lol',
-            },
-          ],
-          totalCount: 1,
-        },
-      };
     },
     finance: async () => {
       return await getYFinanceAuth('AAPL');

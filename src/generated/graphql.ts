@@ -116,7 +116,6 @@ export type Query = {
   dog?: Maybe<Dog>;
   dogs?: Maybe<Array<Maybe<Dog>>>;
   finance?: Maybe<Finance>;
-  getNetworkingList: NetworkingList;
 };
 
 
@@ -315,7 +314,6 @@ export type QueryResolvers<ContextType = SandboxContext, ParentType extends Reso
   dog?: Resolver<Maybe<ResolversTypes['Dog']>, ParentType, ContextType, RequireFields<QueryDogArgs, 'breed'>>;
   dogs?: Resolver<Maybe<Array<Maybe<ResolversTypes['Dog']>>>, ParentType, ContextType>;
   finance?: Resolver<Maybe<ResolversTypes['Finance']>, ParentType, ContextType>;
-  getNetworkingList?: Resolver<ResolversTypes['NetworkingList'], ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = SandboxContext> = {
