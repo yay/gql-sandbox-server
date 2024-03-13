@@ -10,7 +10,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ],
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: ['.eslintrc.cjs'],
   rules: {
     '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
     '@typescript-eslint/no-explicit-any': ['off'],
