@@ -1,5 +1,6 @@
 import { hash } from './hash';
 import { QueryResolvers, Resolvers } from './generated/graphql';
+import { delay } from './delay';
 
 const createDog = (breed: string, subBreeds: string[]) => ({
   breed,
@@ -9,20 +10,12 @@ const createDog = (breed: string, subBreeds: string[]) => ({
 
 const API = 'https://dog.ceo/api';
 
-function delay(timeout: number) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, timeout);
-  });
-}
-
 export const dogResolvers: Resolvers = {
   Dog: {
     displayImage: async ({ breed }, parent, context) => {
       const results = await fetch(`${API}/breed/${breed}/images/random`);
       const { message: image } = (await results.json()) as { message: string };
-      await delay(1000);
+      await delay();
       return image;
     },
     images: async ({ breed }, parent, context) => {
@@ -30,7 +23,7 @@ export const dogResolvers: Resolvers = {
       const { message: images } = (await results.json()) as {
         message: string[];
       };
-      await delay(1000);
+      await delay();
       return images.map((image) => ({ url: image, id: hash(image) }));
     },
   },
