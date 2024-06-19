@@ -17,21 +17,15 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type Actor = {
-  __typename?: 'Actor';
-  movies?: Maybe<Array<Maybe<Movie>>>;
-  name: Scalars['String']['output'];
-};
-
 export enum CacheControlScope {
   Private = 'PRIVATE',
   Public = 'PUBLIC'
 }
 
-export type Director = {
-  __typename?: 'Director';
-  movies?: Maybe<Array<Maybe<Movie>>>;
-  name: Scalars['String']['output'];
+export type CreateFolderInput = {
+  fileSystemId: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  parentId: Scalars['String']['input'];
 };
 
 export type Dog = {
@@ -48,30 +42,28 @@ export type Finance = {
   crumb?: Maybe<Scalars['String']['output']>;
 };
 
+export type Folder = {
+  __typename?: 'Folder';
+  children?: Maybe<Array<Folder>>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  parentId?: Maybe<Scalars['String']['output']>;
+};
+
 export type Image = {
   __typename?: 'Image';
   id: Scalars['String']['output'];
   url: Scalars['String']['output'];
 };
 
-export type Movie = {
-  __typename?: 'Movie';
-  cast?: Maybe<Array<Maybe<Actor>>>;
-  director: Director;
-  title: Scalars['String']['output'];
-  year?: Maybe<Scalars['Int']['output']>;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
-  addMovie?: Maybe<Movie>;
+  createFolder?: Maybe<Folder>;
 };
 
 
-export type MutationAddMovieArgs = {
-  director: Scalars['String']['input'];
-  title: Scalars['String']['input'];
-  year?: InputMaybe<Scalars['Int']['input']>;
+export type MutationCreateFolderArgs = {
+  input: CreateFolderInput;
 };
 
 export type NetworkingList = {
@@ -199,16 +191,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Actor: ResolverTypeWrapper<Actor>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CacheControlScope: CacheControlScope;
-  Director: ResolverTypeWrapper<Director>;
+  CreateFolderInput: CreateFolderInput;
   Dog: ResolverTypeWrapper<Dog>;
   Finance: ResolverTypeWrapper<Finance>;
+  Folder: ResolverTypeWrapper<Folder>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
-  Movie: ResolverTypeWrapper<Movie>;
   Mutation: ResolverTypeWrapper<{}>;
   NetworkingList: ResolverTypeWrapper<NetworkingList>;
   NetworkingListEntriesData: ResolverTypeWrapper<NetworkingListEntriesData>;
@@ -222,15 +213,14 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Actor: Actor;
   Boolean: Scalars['Boolean']['output'];
-  Director: Director;
+  CreateFolderInput: CreateFolderInput;
   Dog: Dog;
   Finance: Finance;
+  Folder: Folder;
   ID: Scalars['ID']['output'];
   Image: Image;
   Int: Scalars['Int']['output'];
-  Movie: Movie;
   Mutation: {};
   NetworkingList: NetworkingList;
   NetworkingListEntriesData: NetworkingListEntriesData;
@@ -248,18 +238,6 @@ export type CacheControlDirectiveArgs = {
 
 export type CacheControlDirectiveResolver<Result, Parent, ContextType = SandboxContext, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type ActorResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Actor'] = ResolversParentTypes['Actor']> = {
-  movies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Movie']>>>, ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DirectorResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Director'] = ResolversParentTypes['Director']> = {
-  movies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Movie']>>>, ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type DogResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Dog'] = ResolversParentTypes['Dog']> = {
   breed?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   displayImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -274,22 +252,22 @@ export type FinanceResolvers<ContextType = SandboxContext, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type FolderResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Folder'] = ResolversParentTypes['Folder']> = {
+  children?: Resolver<Maybe<Array<ResolversTypes['Folder']>>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  parentId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ImageResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Image'] = ResolversParentTypes['Image']> = {
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MovieResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Movie'] = ResolversParentTypes['Movie']> = {
-  cast?: Resolver<Maybe<Array<Maybe<ResolversTypes['Actor']>>>, ParentType, ContextType>;
-  director?: Resolver<ResolversTypes['Director'], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  year?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type MutationResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addMovie?: Resolver<Maybe<ResolversTypes['Movie']>, ParentType, ContextType, RequireFields<MutationAddMovieArgs, 'director' | 'title'>>;
+  createFolder?: Resolver<Maybe<ResolversTypes['Folder']>, ParentType, ContextType, RequireFields<MutationCreateFolderArgs, 'input'>>;
 };
 
 export type NetworkingListResolvers<ContextType = SandboxContext, ParentType extends ResolversParentTypes['NetworkingList'] = ResolversParentTypes['NetworkingList']> = {
@@ -317,12 +295,10 @@ export type QueryResolvers<ContextType = SandboxContext, ParentType extends Reso
 };
 
 export type Resolvers<ContextType = SandboxContext> = {
-  Actor?: ActorResolvers<ContextType>;
-  Director?: DirectorResolvers<ContextType>;
   Dog?: DogResolvers<ContextType>;
   Finance?: FinanceResolvers<ContextType>;
+  Folder?: FolderResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
-  Movie?: MovieResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   NetworkingList?: NetworkingListResolvers<ContextType>;
   NetworkingListEntriesData?: NetworkingListEntriesDataResolvers<ContextType>;

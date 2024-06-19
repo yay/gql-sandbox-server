@@ -4,10 +4,10 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 import { hash } from './hash';
 import { readFileSync } from 'fs';
 import { Resolvers } from './generated/graphql';
-import { getYFinanceAuth } from './yahoo';
+import { createFolder } from './folderDb';
 
 /**
- * The following lines intialize `dotenv`,
+ * The following lines initialize `dotenv`,
  * so that env vars from the .env file are present in `process.env`.
  */
 dotenv.config();
@@ -88,9 +88,6 @@ const resolvers: Resolvers = {
       };
       return createDog(breed, subbreeds);
     },
-    finance: async () => {
-      return await getYFinanceAuth('AAPL');
-    },
   },
   Dog: {
     displayImage: async ({ breed }, parent, context) => {
@@ -109,13 +106,9 @@ const resolvers: Resolvers = {
   // In GraphQL, it's recommended for every mutation's response to include the data that the mutation modified.
   // This enables clients to obtain the latest persisted data without needing to send a followup query.
   Mutation: {
-    addMovie: async (bred, parent, context) => {
-      return {
-        title: 'lol',
-        director: {
-          name: 'lol',
-        },
-      };
+    createFolder: async (parent, args) => {
+      const { name, fileSystemId, parentId } = args.input;
+      return createFolder(name, fileSystemId, parentId);
     },
   },
 };

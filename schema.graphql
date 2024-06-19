@@ -10,7 +10,20 @@ type Query {
 # Whereas the Query type defines entry points for read operations,
 # the Mutation type defines entry points for write operations.
 type Mutation {
-  addMovie(title: String!, director: String!, year: Int): Movie
+  createFolder(input: CreateFolderInput!): Folder
+}
+
+input CreateFolderInput {
+  fileSystemId: ID!
+  name: String!
+  parentId: String!
+}
+
+type Folder {
+  id: ID!
+  name: String!
+  parentId: String
+  children: [Folder!]
 }
 
 enum CacheControlScope {
@@ -44,23 +57,6 @@ type Dog @cacheControl(maxAge: 1000) {
 type Image @cacheControl(maxAge: 1000) {
   url: String!
   id: String!
-}
-
-type Movie {
-  title: String!
-  year: Int
-  director: Director!
-  cast: [Actor]
-}
-
-type Director {
-  name: String!
-  movies: [Movie]
-}
-
-type Actor {
-  name: String!
-  movies: [Movie]
 }
 
 type NetworkingList {
