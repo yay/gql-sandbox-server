@@ -1,97 +1,41 @@
-# The Query type is a special object type that defines all of the top-level entry points
-# for queries that clients execute against your server.
 type Query {
-  dogs: [Dog]
-  dog(breed: String!): Dog
-  finance: Finance
+  users: [User!]
 }
 
-# The Mutation type is similar in structure and purpose to the Query type.
-# Whereas the Query type defines entry points for read operations,
-# the Mutation type defines entry points for write operations.
 type Mutation {
-  createFolder(input: CreateFolderInput!): Folder
+  createUser(input: CreateUserInput!): User!
+  updateUser(input: UpdateUserInput!): User
+  deleteUser(id: ID!): String
 }
 
-input CreateFolderInput {
-  fileSystemId: ID!
-  name: String!
-  parentId: String!
+type Subscription {
+  scoreChanged(userId: ID): ScoreChangedResult!
 }
 
-type Folder {
+type User {
   id: ID!
-  name: String!
-  parentId: String
-  children: [Folder!]
+  email: String!
+  firstName: String!
+  lastName: String!
+  score: Int!
 }
 
-enum CacheControlScope {
-  PUBLIC
-  PRIVATE
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  score: Int!
 }
 
-directive @cacheControl(
-  maxAge: Int
-  scope: CacheControlScope
-  inheritMaxAge: Boolean
-) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
-
-type Finance {
-  crumb: String
+input UpdateUserInput {
+  id: ID!
+  firstName: String
+  lastName: String
 }
 
-# Every object type in your schema automatically has a field named '__typename' (you don't need to define it).
-# The '__typename' field returns the object type's name as a String (e.g., 'Image').
-# GraphQL clients use an object's '__typename' for many purposes, such as to determine which type was returned
-# by a field that can return multiple types (i.e., a union or interface).
-type Dog @cacheControl(maxAge: 1000) {
-  # By default, it's valid for any field in your schema to return null instead of its specified type.
-  id: String! # ! == can't return null
-  breed: String!
-  displayImage: String
-  images: [Image]
-  subbreeds: [String]
+type ScoreChangedResult {
+  id: ID!
+  score: Int!
 }
 
-type Image @cacheControl(maxAge: 1000) {
-  url: String!
-  id: String!
-}
 
-type NetworkingList {
-  id: ID
-  name: String!
-  networkingListEntriesData(
-    # filters: NetworkingListEntriesFilters
-    limit: Int
-    page: Int
-    search: String
-    sort: [NetworkingListEntriesSort!]
-  ): NetworkingListEntriesData!
-}
-
-type NetworkingListEntriesData {
-  data: [NetworkingListEntry!]
-  totalCount: Int!
-}
-
-type NetworkingListEntry {
-  createdDate: String
-}
-
-input NetworkingListEntriesSort {
-  field: NetworkingListEntriesSortField!
-  order: SortOrder!
-}
-
-enum NetworkingListEntriesSortField {
-  CREATED_DATE
-  LOCATION
-  NAME
-}
-
-enum SortOrder {
-  ASC
-  DESC
-}
